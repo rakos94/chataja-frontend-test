@@ -4,8 +4,10 @@ import router from './router'
 
 import 'font-awesome/css/font-awesome.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import 'jquery/src/jquery.js'
+// import $ from'jquery/src/jquery.js'
 import 'bootstrap/dist/js/bootstrap.min.js'
+
+window.$ = window.jQuery = require('jquery');
 
 Vue.config.productionTip = false
 
@@ -20,6 +22,7 @@ var config = {
 };
 firebase.initializeApp(config);
 
+Vue.prototype.$jquery = require('jquery');
 Vue.prototype.$fb = firebase.database();
 new Vue({
   router,

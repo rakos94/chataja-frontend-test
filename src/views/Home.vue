@@ -7,7 +7,7 @@
         <div class="">
           
           <div class="mesgs">
-            <div class="msg_history">
+            <div class="msg_history" id="msg_history">
               <ChatRow v-for="(m,key) in messages" :key="'message'+key" :message="m" />
             </div>
             <div class="type_msg">
@@ -42,6 +42,7 @@ export default {
       messages: [],
       user: JSON.parse(localStorage.getItem('user')),
       input_message: null,
+      mounted_once: false
     }
   },
   mounted(){
@@ -49,6 +50,8 @@ export default {
     let ref = this.$fb.ref();
     ref.on("value", function(snapshot) {
       _this.messages = snapshot.val().chats || []
+      if(!_this.mounted_once) _this.scrollToBottom()
+      _this.mounted_once = true
     });
   },
   methods: {
@@ -60,6 +63,13 @@ export default {
         created_at: moment().format("YYYY-MM-DD HH:mm")
       });
       this.input_message = null
+      this.scrollToBottom()
+    },
+    scrollToBottom(){  
+      this.$nextTick(() => {
+        let container = this.$el.querySelector("#msg_history");
+        container.scrollTop = container.scrollHeight;
+      })
     }
   }
 }
@@ -83,7 +93,7 @@ input.no-outline:focus {
   vertical-align: top;
   width: 92%;
  }
- .received_withd_msg p {
+ .received_withd_msg .received_msg_wrapper {
   background: #ebebeb none repeat scroll 0 0;
   border-radius: 3px;
   color: #646464;
@@ -105,7 +115,7 @@ input.no-outline:focus {
   justify-content: space-between;
   padding: 30px 15px 0 25px;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
 }
 
  .sent_msg p {
@@ -146,13 +156,17 @@ input.no-outline:focus {
   font-size: 17px;
   height: 33px;
   position: absolute;
+  top: 15px;
   right: 0;
-  top: 11px;
   width: 33px;
+  z-index: 100;
 }
 .messaging { padding: 0 0 50px 0;}
 .msg_history {
-  height: 516px;
+  flex: 1 0;
   overflow-y: auto;
+}
+.line_height_content{
+  line-height: 1.2;
 }
 </style>
