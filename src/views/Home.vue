@@ -48,7 +48,7 @@ export default {
     let _this = this
     let ref = this.$fb.ref();
     ref.on("value", function(snapshot) {
-      _this.messages = snapshot.val().chats
+      _this.messages = snapshot.val().chats || []
     });
   },
   methods: {
